@@ -9,6 +9,35 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+func Rollback(tx *sql.Tx) {
+	if tx == nil {
+		return
+	}
+	if err := tx.Rollback(); err != nil && err != sql.ErrTxDone {
+		log.Fatal(err)
+	}
+}
+
+func AddEntry(db *sql.DB, name string, age int) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	defer Rollback(tx)
+
+	_, err = tx.Exec("INSERT INTO test (name, age) VALUES (?, ?)", name, age)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec("UPDATE test SET age = age + 100 WHERE name = ?", name)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
 func main() {
 	engine := gin.Default()
 
@@ -16,11 +45,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	defer db.Close()
+
 	engine.GET("/", func(c *gin.Context) {
+		err := AddEntry(db, "Johnny Joestar", 20)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
 		c.JSON(200, gin.H{
-			"message": "Hello World!",
+			"message": "Transaction is Successful!",
 		})
 	})
 
