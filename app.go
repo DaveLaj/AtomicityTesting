@@ -1,12 +1,14 @@
 package main
 
 import (
+	"SQLTest/database"
+	"SQLTest/routes"
 	"database/sql"
+
 	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func Rollback(tx *sql.Tx) {
@@ -39,26 +41,26 @@ func AddEntry(db *sql.DB, name string, age int) error {
 }
 
 func main() {
-	engine := gin.Default()
 
-	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/transaction_test")
+	err := database.Connect("root:@tcp(127.0.0.1:3306)", "transaction_test")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	engine := gin.Default()
 
-	engine.GET("/", func(c *gin.Context) {
-		err := AddEntry(db, "Johnny Joestar", 20)
-		if err != nil {
-			c.JSON(500, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		c.JSON(200, gin.H{
-			"message": "Transaction is Successful!",
-		})
-	})
+	routes.User(engine)
+	// engine.GET("/", func(c *gin.Context) {
+	// 	err := AddEntry(db, "Johnny Joestar", 20)
+	// 	if err != nil {
+	// 		c.JSON(500, gin.H{
+	// 			"error": err.Error(),
+	// 		})
+	// 		return
+	// 	}
+	// 	c.JSON(200, gin.H{
+	// 		"message": "Transaction is Successful!",
+	// 	})
+	// })
 
 	if err := engine.Run(":6900"); err != nil {
 		fmt.Println("Error starting server")
