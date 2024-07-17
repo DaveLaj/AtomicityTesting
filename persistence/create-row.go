@@ -1,15 +1,19 @@
 package persistence
 
 import (
-	"SQLTest/database"
 	"SQLTest/models"
 	utils "SQLTest/persistence/utils"
+	"database/sql"
 	"fmt"
 )
 
+type UserModel struct {
+	DB *sql.DB
+}
+
 // CreateRow is a function to create a row in a table
-func CreateRow(user models.CreateUser) error {
-	test := database.Test
+func (m *UserModel) CreateRow(user models.CreateUser) error {
+	test := m.DB
 	tx, err := test.Begin()
 	if err != nil {
 		return err

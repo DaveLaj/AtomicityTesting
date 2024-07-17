@@ -1,17 +1,17 @@
 package routes
 
 import (
+	"SQLTest/config"
 	"SQLTest/models"
-	"SQLTest/persistence"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 // function to get user
-func User(c *gin.Engine) {
+func User(env *config.Env, c *gin.Engine) {
 	user := c.Group("/user")
-
+	UserModel := env.M
 	user.GET("/get-user/:id", func(c *gin.Context) {
 		rawID := c.Param("id")
 		id, err := strconv.Atoi(rawID)
@@ -22,7 +22,7 @@ func User(c *gin.Engine) {
 			return
 		}
 
-		user, err := persistence.SelectRow(id)
+		user, err := UserModel.SelectRow(id)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),
@@ -43,7 +43,7 @@ func User(c *gin.Engine) {
 			return
 		}
 
-		err = persistence.CreateRow(user)
+		err = UserModel.CreateRow(user)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),

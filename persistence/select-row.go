@@ -4,14 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 
-	"SQLTest/database"
 	"SQLTest/models"
 )
 
 // SelectRow is a function to select a row from a table
-func SelectRow(id int) (user *models.User, err error) {
+func (m *UserModel) SelectRow(id int) (user *models.User, err error) {
 	stmt := `SELECT id, name, age FROM test WHERE id = ?`
-	test := database.Test
+	test := m.DB
 	user = &models.User{}
 	row := test.QueryRow(stmt, id)
 
