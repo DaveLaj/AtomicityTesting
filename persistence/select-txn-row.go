@@ -8,11 +8,15 @@ import (
 )
 
 // SelectRow is a function to select a row from a table
-func (m *UserModel) SelectRowByID(id int) (user *models.User, err error) {
+func (m *UserModel) SelectRowByIDTxn(id int) (user *models.User, err error) {
 	stmt := `SELECT id, name, age FROM test WHERE id = ?`
 	test := m.DB
+	tx, err := test.Begin()
+	if err != nil {
+		return nil, fmt.Errorf("Error while starting transaction: %w", err)
+	}
 	user = &models.User{}
-	row := test.QueryRow(stmt, id)
+	row := tx.QueryRow(stmt, id)
 
 	err = row.Scan(&user.ID, &user.Name, &user.Age)
 	if err == sql.ErrNoRows {

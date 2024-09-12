@@ -22,7 +22,7 @@ func main() {
 
 	// Initialize the environment
 	env := &config.Env{
-		M: persistence.UserModel{DB: db},
+		Model: persistence.UserModel{DB: db},
 	}
 
 	// Initialize the routes
