@@ -22,21 +22,21 @@ func User(env *config.Env, c *gin.Engine) {
 			return
 		}
 
-		err = UserModel.UpdateNameByIDTxn(id, "Override")
-		if err != nil {
-			c.JSON(500, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
+		// err = UserModel.UpdateAmountByIDTxn(id, "Override")
+		// if err != nil {
+		// 	c.JSON(500, gin.H{
+		// 		"error": err.Error(),
+		// 	})
+		// 	return
+		// }
 
-		err = UserModel.UpdateNameByIDTxn(id+1, "Override2")
-		if err != nil {
-			c.JSON(500, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
+		// err = UserModel.UpdateAmountByIDTxn(id+1, "Override2")
+		// if err != nil {
+		// 	c.JSON(500, gin.H{
+		// 		"error": err.Error(),
+		// 	})
+		// 	return
+		// }
 
 		user, err := UserModel.SelectRowByID(id)
 		if err != nil {

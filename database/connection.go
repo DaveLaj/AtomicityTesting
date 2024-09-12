@@ -2,13 +2,27 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func Connect(creds string, dbname string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", creds+"/"+dbname)
+type DbConfig struct {
+	DB_USERNAME string
+	DB_PASSWORD string
+	DB_HOST     string
+	DB_PORT     string
+}
+
+func Connect(config *DbConfig, dbName string) (*sql.DB, error) {
+	username := config.DB_USERNAME
+	password := config.DB_PASSWORD
+	host := config.DB_HOST
+	port := config.DB_PORT
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbName)
+
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
