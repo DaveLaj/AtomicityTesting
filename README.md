@@ -71,11 +71,11 @@ Still, you go `SERIALIZABLE` when your application’s transaction logic is suff
 
 `SERIALIZABLE` is a good choice if:
 
-Data accuracy is paramount and you don’t want to risk anomalies due to missing FOR UPDATE locks.
+- Data accuracy is paramount and you don’t want to risk anomalies due to missing FOR UPDATE locks.
 
-You are able to use abstractions in your application that let you avoid repeating the retry loop code throughout the app.
+- You are able to use abstractions in your application that let you avoid repeating the retry loop code throughout the app.
 
-You have a retry loop at another level that obviates the need for retries in the app server. For example, a mobile app will often retry failed API calls to cover for flaky networks, and this retry can also cover issues related to serializability.
+- You have a retry loop at another level that obviates the need for retries in the app server. For example, a mobile app will often retry failed API calls to cover for flaky networks, and this retry can also cover issues related to serializability.
 
 A typical use case for when `SERIALIZABLE` is the best option would be a banking or financial payments system that processes transactions that transfer money between accounts.
 
