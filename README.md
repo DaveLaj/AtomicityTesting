@@ -80,3 +80,5 @@ You have a retry loop at another level that obviates the need for retries in the
 A typical use case for when `SERIALIZABLE` is the best option would be a banking or financial payments system that processes transactions that transfer money between accounts.
 
 As the highest level of isolation, it’s best suited for scenarios requiring strict consistency and where the integrity of each transaction is critical. After all, when transferring money between accounts, it’s essential that the amount that leaves Account A arrives intact at Account B with no other transactions interfering. Data anomalies are never good, but they are 10x worse when causing problems like incorrect or missing funds in your bank account
+
+Explanation from: [https://www.cockroachlabs.com/blog/sql-isolation-levels-explained/]
